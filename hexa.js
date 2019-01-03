@@ -101,16 +101,17 @@ class HexAxial {
 	}
 
 	drawhex(itisflat) {
-		if (itisflat) {this.flat_hex_to_pixel().drawFlatHex(this.axEquiv)}
-		else {this.pointy_hex_to_pixel().drawPointyHex()}
+		if (itisflat) {this.flat_hex_to_pixel().drawFlatHex(this)}
+		else {
+			this.pointy_hex_to_pixel().drawPointyHex()
+		}
 	}
 }
 
 class PointEucl {
-	constructor(x,y, axEquiv) {
+	constructor(x,y) {
 		this.x = x;
 		this.y = y;
-		this.axEquiv = axEquiv;
 	}
 
 	drawPointyHex () {
@@ -180,7 +181,7 @@ class Corner {
 var allCorner = [];
 
 /* Faire le pavage */
-var plateau = [new HexAxial(0, 0)];
+var plateau = [new HexAxial(0, 0, [])];
 function pavageHex(iWantFlatHex) {
 	plateau.push(new HexAxial(-1, 0,[]));
 	plateau.push(new HexAxial(-1, 1,[]));
