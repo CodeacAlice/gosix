@@ -1,3 +1,55 @@
+/* Eléments pour le dessin */
+const c = document.getElementById("myCanvas");
+const ctx = c.getContext("2d");
+
+ctx.translate(c.width / 2, c.height / 2);
+
+var posPen = {
+	posX: 0,
+	posY: 0,
+	angle: 0.0};
+
+var sizeHex = 70;
+var radiusRound = 10;
+ctx.fillStyle = "white";
+
+//Fonction pour tourner selon un certain angle et avancer, en traçant ou non une ligne
+function movePol (dist, angle, draw) {
+	var x = posPen['posX'];
+	var y = posPen['posY'];
+	var newAngle = posPen['angle'] + angle;
+
+	var angleRad = newAngle * Math.PI / 180;
+	var newX = x + dist*Math.cos(angleRad);
+	var newY = y + dist*Math.sin(angleRad);
+
+	posPen['posX'] = newX;
+	posPen['posY'] = newY;
+	posPen['angle'] = newAngle;
+
+	if (draw) {
+		ctx.lineTo(newX, newY);
+		//ctx.stroke();
+	}
+	else {ctx.moveTo(newX, newY);}
+
+	return posPen
+}
+
+//Fonction pour se déplacer au point de coordonnées (x,y) en traçant ou non une ligne
+function moveEucl (x, y, draw) {
+	posPen['posX'] = x;
+	posPen['posY'] = y;
+
+	if (draw) {
+		ctx.lineTo(x, y);
+		//ctx.stroke();
+	}
+	else {ctx.moveTo(x, y);}
+}
+
+
+/* Implémenter les systèmes de coordonnées des hexagones */
 class HexCube {
 	constructor(x,y,z) {
 		this.x=x;
@@ -16,11 +68,6 @@ class HexCube {
 	}
 }
 
-var cube1 = new HexCube(1,-1,0);
-
-
-
-
 class HexAxial {
 	constructor(q,r) {
 		this.q = q;
@@ -34,124 +81,130 @@ class HexAxial {
 		return new HexCube(x,y,z)
 	}
 
-	pointy_hex_to_pixel(size) {
-	    var x = size * (Math.sqrt(3) * this.q  +  Math.sqrt(3)/2 * this.r)
-	    var y = size * (3./2 * this.r)
-	    return [x, y]
+	pointy_hex_to_pixel() {
+	    var x = sizeHex * (Math.sqrt(3) * this.q  +  Math.sqrt(3)/2 * this.r);
+	    var y = sizeHex * (3./2 * this.r);
+	    return new PointEucl(x,y)
+	}
+	flat_hex_to_pixel() {
+	    var x = sizeHex * 3/2 * this.q;
+	    var y = sizeHex * (Math.sqrt(3)/2 * this.q + Math.sqrt(3) * this.r);
+	    return new PointEucl(x,y)
 	}
 
-	drawPointyHex (size) {
-		var euclCenter = this.pointy_hex_to_pixel(size);
-		moveEucl(euclCenter[0], euclCenter[1]);
-		posPen[2] = 0;
-		movePol (size, 30, false);
+	drawhex(itisflat) {
+		if (itisflat) {this.flat_hex_to_pixel().drawFlatHex()}
+		else {this.pointy_hex_to_pixel().drawPointyHex()}
+	}
+}
+
+class PointEucl {
+	constructor(x,y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	drawPointyHex () {
+		moveEucl(this.x, this.y);
+		posPen['angle'] = 0;
+		movePol (sizeHex, 30, false);
 		movePol (0, -60, false);
 		for (var i=1; i<=6; i++) {
-			movePol(size, -60, true)
+			movePol(sizeHex, -60, true);
+		}
+		//ctx.stroke();
+	}
+
+	drawFlatHex () {
+		moveEucl(this.x, this.y);
+		posPen['angle'] = 0;
+		movePol (sizeHex, 60, false);
+		posPen['angle'] -= 60;
+		for (var i=1; i<=6; i++) {
+			// movePol(radiusRound, -60, false)
+			movePol(sizeHex, -60, true);
+			// ctx.stroke();
+			
+			// ctx.beginPath(); 
+			//moveEucl(posPen['posX'], posPen['posY'],false);
+			new Corner(Math.round(posPen['posX']),Math.round(posPen['posY'])).addInAllCorner();
 		}
 		//ctx.stroke();
 	}
 }
 
-var ax1 = new HexAxial(3,-2);
-var p0 = new HexAxial(0,0);
-
-
-/* Dessiner un hexagone */
-var c = document.getElementById("myCanvas");
-var ctx = c.getContext("2d");
-
-ctx.translate(c.width / 2, c.height / 2);
-
-var posPen = [0, 0, 0.0];
-
-function movePol (dist, angle, draw) {
-	var x = posPen[0];
-	var y = posPen[1];
-	var newAngle = posPen[2] + angle;
-
-	var angleRad = newAngle * Math.PI / 180;
-	var newX = x + dist*Math.cos(angleRad);
-	var newY = y + dist*Math.sin(angleRad);
-
-	posPen = [newX, newY, newAngle];
-
-	if (draw) {
-		ctx.lineTo(newX, newY);
-		//ctx.stroke();
+class Corner {
+	constructor(x, y) {
+		this.x = x;
+		this.y = y
 	}
-	else {ctx.moveTo(newX, newY);}
 
-	return posPen
-}
-
-function moveEucl (x, y, draw) {
-	posPen[0] = x;
-	posPen[1] = y;
-
-	if (draw) {
-		ctx.lineTo(x, y);
-		//ctx.stroke();
+	makeCircle() {
+		ctx.beginPath(); 
+		ctx.arc(this.x, this.y, radiusRound, 0, 2 * Math.PI);
+		ctx.stroke();
+		ctx.fill();
 	}
-	else {ctx.moveTo(x, y);}
+
+	addInAllCorner() {
+		var notInThere = true;
+		var indexA = 0;
+		while (notInThere && indexA < allCorner.length) {
+			if (allCorner[indexA].x == this.x && allCorner[indexA].y == this.y) {
+				notInThere = false
+			}
+			indexA ++;
+		}
+		if (notInThere) {allCorner.push(this)}
+	}
+
+	imInTheCircle(posx, posy) {
+		var d = Math.sqrt((posx - this.x)*(posx - this.x) + (posy - this.y)*(posy - this.y));
+		return d <= radiusRound
+	}
 }
-
-
-
+var allCorner = [];
 
 /* Faire le pavage */
-var qmax = 0;
-var rmax = 0;
+var plateau = [new HexAxial(0, 0)];
+function pavageHex(iWantFlatHex) {
+	
 
-var qmaxNotFound = true;
-var rmaxNotFound = true;
-var itwillStop = 1
+	plateau.push(new HexAxial(-1, 0));
+	plateau.push(new HexAxial(-1, 1));
+	plateau.push(new HexAxial(0, 1));
+	plateau.push(new HexAxial(0, -1));
+	plateau.push(new HexAxial(1, -1));
+	plateau.push(new HexAxial(1, 0));
 
-while (qmaxNotFound) {
-	var testQ = new HexAxial(qmax, 0);
-	var x = testQ.pointy_hex_to_pixel(50)[0];
-
-	if(x/2 > c.width) {
-		qmaxNotFound = false;
+	for (var k = 0; k < plateau.length; k++) {
+		plateau[k].drawhex(iWantFlatHex);
 	}
-	else {
-		qmax ++;
-	}
-}
+	ctx.stroke();
 
-while (rmaxNotFound) {
-	var testR = new HexAxial(0, rmax);
-	var y = testR.pointy_hex_to_pixel(50)[1];
-
-	if(y/2 > c.height) {
-		rmaxNotFound = false;
-	}
-	else {
-		rmax++;
+	for (var k = 0; k < allCorner.length; k++) {
+		allCorner[k].makeCircle();
 	}
 }
 
-var plateau = [];
-for (var qIt = Math.round(1-qmax/2); qIt<qmax/2; qIt++) {
-	for (var rIt = Math.round(1-rmax/2); rIt < rmax/2; rIt++) {
-		plateau.push(new HexAxial(qIt, rIt))
+window.onload = pavageHex(true);
+
+
+// ctx.fillStyle = "red";
+// ctx.fillRect(0, 0, 150, 80); 
+
+function showCoords(event) {
+  var x = event.clientX - c.width/2;
+  var y = event.clientY - c.height/2;
+  var ind = 0;
+  var noCircleClicked = true;
+  while (noCircleClicked && ind < allCorner.length) {
+	  if (allCorner[ind].imInTheCircle(x,y)) {
+	  	noCircleClicked = false;
+	  	ctx.fillStyle = "black";
+	  	allCorner[ind].makeCircle();
+	  }
+	  ind++
 	}
 }
 
-
-
-// var pl0 = new HexAxial (0,0);
-// var pl1 = new HexAxial (0,1);
-// var pl2 = new HexAxial (0,-1);
-// var pl3 = new HexAxial (-1,1);
-// var pl4 = new HexAxial (-1,0);
-// var pl5 = new HexAxial (1,0);
-// var pl6 = new HexAxial (1,-1);
-
-// var plateau = [pl0, pl1, pl2, pl3, pl4, pl5, pl6];
-
-for (var k = 0; k < plateau.length; k++) {
-	plateau[k].drawPointyHex(50);
-	console.log(plateau[k]);
-}
-ctx.stroke();
