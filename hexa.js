@@ -2,7 +2,10 @@
 const c = document.getElementById("myCanvas");
 const ctx = c.getContext("2d");
 
-ctx.translate(c.width / 2, c.height / 2);
+var originX = c.width/2;
+var originY = c.height / 2
+
+ctx.translate(originX, originY);
 
 var posPen = {
 	posX: 0,
@@ -11,7 +14,10 @@ var posPen = {
 
 var sizeHex = 70;
 var radiusRound = 10;
-ctx.fillStyle = "white";
+
+var colorCircle = "white";
+var colorPlayer1 = "green";
+var colorPlayer2 = "red";
 
 //Fonction pour tourner selon un certain angle et avancer, en traçant ou non une ligne
 function movePol (dist, angle, draw) {
@@ -69,9 +75,11 @@ class HexCube {
 }
 
 class HexAxial {
-	constructor(q,r) {
+	constructor(q,r, corners, nbCornersFree) {
 		this.q = q;
 		this.r = r;
+		this.corners = corners;
+		this.nbCornersFree = nbCornersFree;
 	}
 
 	toCube () {
@@ -84,7 +92,7 @@ class HexAxial {
 	pointy_hex_to_pixel() {
 	    var x = sizeHex * (Math.sqrt(3) * this.q  +  Math.sqrt(3)/2 * this.r);
 	    var y = sizeHex * (3./2 * this.r);
-	    return new PointEucl(x,y)
+	    return new PointEucl(x,y,this)
 	}
 	flat_hex_to_pixel() {
 	    var x = sizeHex * 3/2 * this.q;
@@ -93,15 +101,16 @@ class HexAxial {
 	}
 
 	drawhex(itisflat) {
-		if (itisflat) {this.flat_hex_to_pixel().drawFlatHex()}
+		if (itisflat) {this.flat_hex_to_pixel().drawFlatHex(this.axEquiv)}
 		else {this.pointy_hex_to_pixel().drawPointyHex()}
 	}
 }
 
 class PointEucl {
-	constructor(x,y) {
+	constructor(x,y, axEquiv) {
 		this.x = x;
 		this.y = y;
+		this.axEquiv = axEquiv;
 	}
 
 	drawPointyHex () {
@@ -111,47 +120,52 @@ class PointEucl {
 		movePol (0, -60, false);
 		for (var i=1; i<=6; i++) {
 			movePol(sizeHex, -60, true);
+			new Corner(Math.round(posPen['posX']),Math.round(posPen['posY']), true).addInAllCorner();
 		}
 		//ctx.stroke();
 	}
 
-	drawFlatHex () {
+	drawFlatHex (hex) {
 		moveEucl(this.x, this.y);
 		posPen['angle'] = 0;
 		movePol (sizeHex, 60, false);
 		posPen['angle'] -= 60;
 		for (var i=1; i<=6; i++) {
-			// movePol(radiusRound, -60, false)
 			movePol(sizeHex, -60, true);
-			// ctx.stroke();
-			
-			// ctx.beginPath(); 
-			//moveEucl(posPen['posX'], posPen['posY'],false);
-			new Corner(Math.round(posPen['posX']),Math.round(posPen['posY'])).addInAllCorner();
+			var corn = new Corner(Math.round(posPen['posX']),Math.round(posPen['posY']), [hex], true);
+			corn.addInAllCorner(hex);
+			hex.corners.push(corn)
 		}
 		//ctx.stroke();
 	}
+
+
 }
 
 class Corner {
-	constructor(x, y) {
+	constructor(x, y, hexagones, notAlreadyClicked, takenBy) {
 		this.x = x;
-		this.y = y
+		this.y = y;
+		this.hexagones = hexagones;
+		this.notAlreadyClicked = notAlreadyClicked;
+		this.takenBy = takenBy;
 	}
 
-	makeCircle() {
+	makeCircle(color) {
+		ctx.fillStyle = color;
 		ctx.beginPath(); 
 		ctx.arc(this.x, this.y, radiusRound, 0, 2 * Math.PI);
 		ctx.stroke();
 		ctx.fill();
 	}
 
-	addInAllCorner() {
+	addInAllCorner(hex) {
 		var notInThere = true;
 		var indexA = 0;
 		while (notInThere && indexA < allCorner.length) {
 			if (allCorner[indexA].x == this.x && allCorner[indexA].y == this.y) {
-				notInThere = false
+				notInThere = false;
+				allCorner[indexA].hexagones.push(hex)
 			}
 			indexA ++;
 		}
@@ -168,14 +182,12 @@ var allCorner = [];
 /* Faire le pavage */
 var plateau = [new HexAxial(0, 0)];
 function pavageHex(iWantFlatHex) {
-	
-
-	plateau.push(new HexAxial(-1, 0));
-	plateau.push(new HexAxial(-1, 1));
-	plateau.push(new HexAxial(0, 1));
-	plateau.push(new HexAxial(0, -1));
-	plateau.push(new HexAxial(1, -1));
-	plateau.push(new HexAxial(1, 0));
+	plateau.push(new HexAxial(-1, 0,[]));
+	plateau.push(new HexAxial(-1, 1,[]));
+	plateau.push(new HexAxial(0, 1,[]));
+	plateau.push(new HexAxial(0, -1,[]));
+	plateau.push(new HexAxial(1, -1,[]));
+	plateau.push(new HexAxial(1, 0,[]));
 
 	for (var k = 0; k < plateau.length; k++) {
 		plateau[k].drawhex(iWantFlatHex);
@@ -183,28 +195,36 @@ function pavageHex(iWantFlatHex) {
 	ctx.stroke();
 
 	for (var k = 0; k < allCorner.length; k++) {
-		allCorner[k].makeCircle();
+		allCorner[k].makeCircle(colorCircle);
 	}
 }
 
 window.onload = pavageHex(true);
 
 
-// ctx.fillStyle = "red";
-// ctx.fillRect(0, 0, 150, 80); 
 
-function showCoords(event) {
-  var x = event.clientX - c.width/2;
-  var y = event.clientY - c.height/2;
-  var ind = 0;
-  var noCircleClicked = true;
-  while (noCircleClicked && ind < allCorner.length) {
-	  if (allCorner[ind].imInTheCircle(x,y)) {
-	  	noCircleClicked = false;
-	  	ctx.fillStyle = "black";
-	  	allCorner[ind].makeCircle();
-	  }
-	  ind++
+/* Click on a circle */
+var turn = 0;
+
+function clickOnCorners(event) {
+	colorCircle = "black";
+	var x = event.clientX - originX;
+	var y = event.clientY - originY;
+	var ind = 0;
+	var noCircleClicked = true;
+	while (noCircleClicked && ind < allCorner.length) {
+		if (allCorner[ind].imInTheCircle(x,y) && allCorner[ind].notAlreadyClicked) {
+			noCircleClicked = false;
+			allCorner[ind].notAlreadyClicked = false;
+			allCorner[ind].takenBy = turn;
+
+			if (turn == 0) {
+				allCorner[ind].makeCircle(colorPlayer1);
+			}
+			else {allCorner[ind].makeCircle(colorPlayer2);}
+			turn = (turn+1)%2
+		}
+		ind++
 	}
 }
 
