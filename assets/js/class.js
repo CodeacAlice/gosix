@@ -193,10 +193,6 @@ class Corner2 {
         return new PointEucl(x, y);
     }
 
-    isCenter() {
-        return (this.a - this.b) % 3 == 0;
-    }
-
     drawCircle (color) {
         var coord = this.getCoordP();
         ctx.fillStyle = color;
@@ -204,6 +200,28 @@ class Corner2 {
         ctx.arc(coord.x, coord.y, radiusRound, 0, 2 * Math.PI);
         ctx.stroke();
         ctx.fill();
+    }
+
+    isCenter() {
+        return (this.a - this.b) % 3 == 0;
+    }
+
+    isInside() {
+        return (Math.abs(this.a) < 4 && Math.abs(this.b) < 4 && Math.abs(this.a + this.b) < 4)
+    }
+
+    isNeighbor (corner_2) {
+        var d1 = this.a - corner_2.a, d2 = this.b - corner_2.b;
+        return (Math.abs(d1) <= 1 && Math.abs(d2) <=1 && Math.abs(d1+d2) <= 1)
+    }
+
+    getNeighbors() {
+        return Object.keys(allCorners).map(key => allCorners[key])
+                .filter(cor => this.isNeighbor(cor));
+    }
+
+    getHexa () {
+        return allHexa.filter(hex => this.isNeighbor(hex.getCenterC()))
     }
 }
 
