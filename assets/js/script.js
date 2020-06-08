@@ -2,8 +2,8 @@
 const c = document.getElementById("myCanvas");
 const ctx = c.getContext("2d");
 
-var originX = c.width/2;
-var originY = c.height/2
+const originX = c.width/2;
+const originY = c.height/2
 
 ctx.translate(originX, originY);
 
@@ -12,8 +12,8 @@ var posPen = {
 	posY: 0,
 	angle: 0.0};
 
-var sizeHex = 70;
-var radiusRound = 10;
+const sizeHex = 70;
+const radiusRound = 10;
 
 var colorCircle = "white";
 var colorPlayer1 = "green";
@@ -22,11 +22,20 @@ var colorPlayer2 = "red";
 
 
 /* TESTS */
-var hexTest = new Hexagon(0,0);
-let allCorners = {};
+//var hexTest = new Hexagon(0,0);
+let allCorners = {}, allHexa = [];
 
-hexTest.makeCorners();
-hexTest.draw();
+/* hexTest.makeCorners();
+hexTest.draw(); */
+for (var i = -1; i <= 1; i++) {
+	for (var j = -1; j <= 1; j++) {
+		if (Math.abs(i+j) < 2) {
+			var hexa = new Hexagon(i,j);
+			allHexa.push(hexa);
+			hexa.makeCorners().draw();
+		}
+	}
+}
 
 
 

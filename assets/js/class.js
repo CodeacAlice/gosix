@@ -39,6 +39,7 @@ class Hexagon {
             all.push(name);
         })
         this.corners = all;
+        return this;
     }
 
     draw () {
