@@ -1,0 +1,14 @@
+Dans Gosix, il s'agit de capturer des hexagones, en obtenant la majorité autour. Pour gagner, il faut en avoir capturé 4 sur les 7. Ce jeu repose sur le principe de "plus je gagne, plus je m'affaiblis".
+Tour de jeu
+Je pose un pion à ma couleur sur une intersection libre. Suivant.
+Capture
+Lorsque les 6 coins d'un hexagone sont occupés*, on regarde qui a la majorité. Pour cela, on compte pour chaque joueur les pions qu'il a posés autour de l'hexagone, plus ceux qui sont reliés à ces derniers directement ou par une chaîne continue.
+Celui qui a la majorité place un pion au centre de l'hexagone et retire tous ses pions posés autour.
+Le principe de Gosix est donc : plus je gagne, plus je m'affaiblis. Mais le système de chaînes est là pour éviter de s'affaiblir trop.
+Une fois un hexagone capturé, on peut continuer de poser des pions sur ses coins, mais il ne pourra pas être repris.
+*Il est interdit de fermer un hexagone si cette pose provoque une égalité entre les joueurs.
+Victoire
+Un joueur gagne lorsqu'il remporte son 4e hexagone.
+
+
+(source : https://www.trictrac.net/jeu-de-societe/gosix#description )
