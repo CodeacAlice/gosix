@@ -208,11 +208,13 @@ window.onload = pavageHex(true);
 var turn = 0;
 
 function clickOnCorners(event) {
+	console.log('click')
 	colorCircle = "black";
 	var x = event.clientX - originX;
 	var y = event.clientY - originY;
 	var ind = 0;
 	var noCircleClicked = true;
+	console.log(x, y);
 	while (noCircleClicked && ind < allCorner.length) {
 		if (allCorner[ind].imInTheCircle(x,y) && allCorner[ind].notAlreadyClicked) {
 			noCircleClicked = false;
