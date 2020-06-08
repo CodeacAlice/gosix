@@ -19,6 +19,21 @@ var colorCircle = "white";
 var colorPlayer1 = "green";
 var colorPlayer2 = "red";
 
+
+
+/* TESTS */
+var hexTest = new Hexagon(0,0);
+let allCorners = {};
+
+hexTest.makeCorners();
+hexTest.draw();
+
+
+
+
+
+
+
 //Fonction pour tourner selon un certain angle et avancer, en traçant ou non une ligne
 function movePol (dist, angle, draw) {
 	var x = posPen['posX'];
@@ -79,7 +94,7 @@ function pavageHex(iWantFlatHex) {
 	}
 }
 
-window.onload = pavageHex(true);
+//window.onload = pavageHex(true);
 
 
 
