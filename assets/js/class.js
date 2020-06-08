@@ -192,6 +192,19 @@ class Corner2 {
         var x = sizeHex*(this.a + this.b/2), y = sizeHex*this.b*Math.sqrt(3)/2;
         return new PointEucl(x, y);
     }
+
+    isCenter() {
+        return (this.a - this.b) % 3 == 0;
+    }
+
+    drawCircle (color) {
+        var coord = this.getCoordP();
+        ctx.fillStyle = color;
+        ctx.beginPath(); 
+        ctx.arc(coord.x, coord.y, radiusRound, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.fill();
+    }
 }
 
 

@@ -15,9 +15,9 @@ var posPen = {
 const sizeHex = 70;
 const radiusRound = 10;
 
-var colorCircle = "white";
-var colorPlayer1 = "green";
-var colorPlayer2 = "red";
+const colorCircle = "white";
+const colorPlayer1 = "green";
+const colorPlayer2 = "red";
 
 
 
@@ -36,7 +36,10 @@ for (var i = -1; i <= 1; i++) {
 		}
 	}
 }
-
+Object.keys(allCorners).forEach(key => {
+	allCorners[key].drawCircle(colorCircle);
+	allCorners[key].taken = -1;
+})
 
 
 
