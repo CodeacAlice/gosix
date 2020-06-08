@@ -223,6 +223,12 @@ class Corner2 {
     getHexa () {
         return allHexa.filter(hex => this.isNeighbor(hex.getCenterC()))
     }
+
+    isInCircle(posx, posy) {
+        var coord = this.getCoordP(),
+            d = Math.sqrt((posx - coord.x)*(posx - coord.x) + (posy - coord.y)*(posy - coord.y));
+		return d <= radiusRound;
+    }
 }
 
 

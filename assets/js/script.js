@@ -16,8 +16,7 @@ const sizeHex = 70;
 const radiusRound = 10;
 
 const colorCircle = "white";
-const colorPlayer1 = "green";
-const colorPlayer2 = "red";
+const colorPlayers = ["green", "red"];
 
 
 
@@ -33,6 +32,7 @@ for (var i = -1; i <= 1; i++) {
 			var hexa = new Hexagon(i,j);
 			allHexa.push(hexa);
 			hexa.makeCorners().draw();
+			hexa.taken = -1;
 		}
 	}
 }
@@ -114,24 +114,17 @@ function pavageHex(iWantFlatHex) {
 var turn = 0;
 
 function clickOnCorners(event) {
-	colorCircle = "black";
 	var x = event.clientX - originX;
 	var y = event.clientY - originY;
-	var ind = 0;
-	var noCircleClicked = true;
-	while (noCircleClicked && ind < allCorner.length) {
-		if (allCorner[ind].imInTheCircle(x,y) && allCorner[ind].notAlreadyClicked) {
-			noCircleClicked = false;
-			allCorner[ind].notAlreadyClicked = false;
-			allCorner[ind].takenBy = turn;
+	var corners = Object.keys(allCorners).map(key => allCorners[key]).filter(cor => cor.taken == -1);
+	for (let cor of corners) {
+		if (cor.isInCircle(x,y)) {
+			cor.taken = turn;
+			cor.drawCircle(colorPlayers[turn]);
 
-			if (turn == 0) {
-				allCorner[ind].makeCircle(colorPlayer1);
-			}
-			else {allCorner[ind].makeCircle(colorPlayer2);}
-			turn = (turn+1)%2
+			turn = (turn+1)%2;
+			break;
 		}
-		ind++
 	}
 }
 
