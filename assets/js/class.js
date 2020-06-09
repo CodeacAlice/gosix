@@ -60,7 +60,7 @@ class Hexagon {
 }
 
 
-
+// Point euclidien, x et y sont les coordonnées en pixel
 class PointEucl {
 	constructor(x,y) {
 		this.x = x;
@@ -69,6 +69,7 @@ class PointEucl {
 }
 
 
+// Les coins, 
 class Corner {
     constructor (a, b, taken) {
         this.a = a;
@@ -90,14 +91,16 @@ class Corner {
         ctx.fill();
     }
 
+    // Indique si le coin créé est le centre d'un hexagone
     isCenter() {
         return (this.a - this.b) % 3 == 0;
     }
-
+    // Indique si le coin fait bien partie du plateau (à enlever ?)
     isInside() {
         return (Math.abs(this.a) < 4 && Math.abs(this.b) < 4 && Math.abs(this.a + this.b) < 4)
     }
 
+    // Indique si le coin corner_2 est voisin un direct
     isNeighbor (corner_2) {
         var d1 = this.a - corner_2.a, d2 = this.b - corner_2.b;
         return (Math.abs(d1) <= 1 && Math.abs(d2) <=1 && Math.abs(d1+d2) <= 1)
@@ -112,6 +115,7 @@ class Corner {
         return allHexa.filter(hex => this.isNeighbor(hex.getCenterC()))
     }
 
+    // Indique si le point de coordonnées posx, posy est à l'intérieur du cercle
     isInCircle(posx, posy) {
         var coord = this.getCoordP(),
             d = Math.sqrt((posx - coord.x)*(posx - coord.x) + (posy - coord.y)*(posy - coord.y));
