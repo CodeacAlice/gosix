@@ -18,6 +18,10 @@ class Hexagon {
         return this.getCenterC().getCoordP();
     }
 
+    nbCornersFree () {
+        return this.corners.map(name => allCorners[name]).filter(cor => cor.taken == -1).length;
+    }
+
     findCorners () {
         var center = this.getCenterC(), rep = [];
         rep.push( new Corner (center.a+1, center.b  ));
