@@ -1,17 +1,17 @@
-// Contient toutes les classes utilisées
+/* Contient toutes les classes utilisées */
 
 
-
+// Les hexagones
 class Hexagon {
-    constructor (row, col, corners, taken) {
-        this.row = row;
+    constructor (col, row, corners, taken) {
         this.col = col;
+        this.row = row;
         this.corners = corners;
         this.taken = taken;
     }
 
     getCenterC () {
-        return new Corner (this.row - this.col, this.row + 2*this.col);
+        return new Corner (this.col - this.row, this.col + 2*this.row);
     }
 
     getCenterP () {
