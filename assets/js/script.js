@@ -1,4 +1,20 @@
-/* Eléments pour le dessin */
+
+// -------------------------------------------------------------------------------------------------------
+// Constantes de base
+// -------------------------------------------------------------------------------------------------------
+
+const sizeHex = 70;
+const radiusRound = 10;
+
+const colorDefault = "white";
+const colorPlayers = ["green", "red"];
+
+
+
+// -------------------------------------------------------------------------------------------------------
+// Dessin
+// -------------------------------------------------------------------------------------------------------
+
 const c = document.getElementById("myCanvas");
 const ctx = c.getContext("2d");
 
@@ -7,49 +23,57 @@ const originY = c.height/2
 
 ctx.translate(originX, originY);
 
-const sizeHex = 70;
-const radiusRound = 10;
 
-const colorDefault = "white";
-const colorPlayers = ["green", "red"];
 
-let turn = 0;
+
+// -------------------------------------------------------------------------------------------------------
+// Démarrage
+// -------------------------------------------------------------------------------------------------------
+
 let allHexa = [], allCorners = [];
 
+// Création des hexagones
+for (var i = -1; i <= 1; i++) {
+	for (var j = -1; j <= 1; j++) {
+		if (Math.abs(i+j) < 2) {
+			var hexa = new Hexagon(i,j, -1);
+			allHexa.push(hexa);
+		}
+	}
+}
 
+// Création des coins
+for (var i=-3; i <= 3; i++) {
+	for (var j=-3; j <= 3; j++) {
+		var corner = new Corner (i,j, -1);
+		if (!corner.isCenter() && corner.isInside()) {
+			allCorners.push(corner);
+		}
+	}
+}
 
 // Pavage initial
 function pavageHex() {
-	for (var i = -1; i <= 1; i++) {
-		for (var j = -1; j <= 1; j++) {
-			if (Math.abs(i+j) < 2) {
-				var hexa = new Hexagon(i,j, -1);
-				allHexa.push(hexa);
-				hexa.draw();
-			}
-		}
-	}
-
-	for (var i=-3; i <= 3; i++) {
-		for (var j=-3; j <= 3; j++) {
-			var corner = new Corner (i,j, -1);
-			if (!corner.isCenter() && corner.isInside()) {
-				allCorners.push(corner);
-				corner.drawCircle(colorDefault)
-			}
-		}
-	}
+	allHexa.forEach(hexa => {hexa.draw()});
+	allCorners.forEach(corner => {corner.drawCircle(colorDefault)});
 }
 
 window.onload = pavageHex();
 
 
 
+// -------------------------------------------------------------------------------------------------------
+// Tour de jeu
+// -------------------------------------------------------------------------------------------------------
+
+let turn = 0;
+
 // Clic sur un cercle
 function clickOnCorners(event) {
 	var x = event.clientX - originX;
 	var y = event.clientY - originY;
 	var corners = allCorners.filter(cor => cor.taken == -1);
+	
 	for (let cor of corners) {
 		if (cor.isInCircle(x,y)) { // On a cliqué sur le coin 'cor'
 			cor.taken = turn;
