@@ -18,8 +18,13 @@ class Hexagon {
         return this.getCenterC().getCoordP();
     }
 
+    getCorners () {
+        var center = this.getCenterC();
+        return allCorners_arr.filter(cor => center.isNeighbor(cor));
+    }
+
     nbCornersFree () {
-        return this.corners.map(name => allCorners[name]).filter(cor => cor.taken == -1).length;
+        return this.getCorners().filter(cor => cor.taken == -1).length;
     }
 
     findCorners () {

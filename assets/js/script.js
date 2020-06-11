@@ -14,7 +14,7 @@ const colorCircle = "white";
 const colorPlayers = ["green", "red"];
 
 let turn = 0;
-let allCorners = {}, allHexa = [];
+let allCorners = {}, allHexa = [], allCorners_arr = [];
 
 
 
@@ -33,6 +33,7 @@ function pavageHex() {
 	Object.keys(allCorners).forEach(key => {
 		allCorners[key].drawCircle(colorCircle);
 		allCorners[key].taken = -1;
+		allCorners_arr.push(allCorners[key]);
 	})
 }
 
