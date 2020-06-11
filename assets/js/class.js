@@ -43,6 +43,16 @@ class Hexagon {
         }
         ctx.stroke();
     }
+
+    // Prendre l'hexagon par le joueur 'player'
+    take (player) {
+        this.taken = player;
+        this.getCenterC().drawCircle(colorPlayers[player]);
+        this.getCorners().filter(cor => cor.taken == player).forEach(cor => {
+            cor.taken = -1;
+            cor.drawCircle(colorDefault);
+        })
+    }
 }
 
 
@@ -61,7 +71,7 @@ class PointEucl {
 
 
 // -------------------------------------------------------------------------------------------------------
-// Coins, coordonnées a et b
+// Coins, coordonnées axiales
 // -------------------------------------------------------------------------------------------------------
 
 class Corner {

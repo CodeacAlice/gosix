@@ -127,15 +127,7 @@ function clickOnCorners(event) {
 		else {
 			cor.drawCircle(colorPlayers[turn]);
 			turn = (turn+1)%2;
-
-			hexa_taken.forEach(pair => {
-				var hex = pair.hexagon, pl = pair.player
-				hex.taken = pl;
-				hex.getCenterC().drawCircle(colorPlayers[pl]);
-				hex.getCorners().filter(corn => corn.taken == pl).forEach(corn =>{
-					corn.taken = -1; corn.drawCircle(colorDefault);
-				})
-			})
+			hexa_taken.forEach(pair => {pair.hexagon.take(pair.player)})
 		}
 
 	}
