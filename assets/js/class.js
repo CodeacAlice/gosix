@@ -47,14 +47,15 @@ class Hexagon {
     }
 
     draw () {
-        var corners = this.corners.map(cor => {
-            return allCorners[cor].getCoordP();
-        });
+        var center = this.getCenterP();
         
         ctx.beginPath();
-        ctx.moveTo(corners[0].x, corners[0].y);
-        corners.forEach(c => { ctx.lineTo(c.x, c.y); })
-        ctx.lineTo(corners[0].x, corners[0].y);
+        ctx.moveTo(center.x + sizeHex, center.y);
+        for (var i=1; i <= 6; i++) {
+            var x = center.x + sizeHex*Math.cos(i*Math.PI/3),
+                y = center.y + sizeHex*Math.sin(i*Math.PI/3)
+            ctx.lineTo(x, y);
+        }
         ctx.stroke();
     }
 }
