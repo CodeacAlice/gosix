@@ -10,11 +10,11 @@ ctx.translate(originX, originY);
 const sizeHex = 70;
 const radiusRound = 10;
 
-const colorCircle = "white";
+const colorDefault = "white";
 const colorPlayers = ["green", "red"];
 
 let turn = 0;
-let allCorners = {}, allHexa = [], allCorners_arr = [];
+let allHexa = [], allCorners = [];
 
 
 
@@ -23,18 +23,22 @@ function pavageHex() {
 	for (var i = -1; i <= 1; i++) {
 		for (var j = -1; j <= 1; j++) {
 			if (Math.abs(i+j) < 2) {
-				var hexa = new Hexagon(i,j);
+				var hexa = new Hexagon(i,j, -1);
 				allHexa.push(hexa);
-				hexa.makeCorners().draw();
-				hexa.taken = -1;
+				hexa.draw();
 			}
 		}
 	}
-	Object.keys(allCorners).forEach(key => {
-		allCorners[key].drawCircle(colorCircle);
-		allCorners[key].taken = -1;
-		allCorners_arr.push(allCorners[key]);
-	})
+
+	for (var i=-3; i <= 3; i++) {
+		for (var j=-3; j <= 3; j++) {
+			var corner = new Corner (i,j, -1);
+			if (!corner.isCenter() && corner.isInside()) {
+				allCorners.push(corner);
+				corner.drawCircle(colorDefault)
+			}
+		}
+	}
 }
 
 window.onload = pavageHex();
@@ -45,7 +49,7 @@ window.onload = pavageHex();
 function clickOnCorners(event) {
 	var x = event.clientX - originX;
 	var y = event.clientY - originY;
-	var corners = Object.keys(allCorners).map(key => allCorners[key]).filter(cor => cor.taken == -1);
+	var corners = allCorners.filter(cor => cor.taken == -1);
 	for (let cor of corners) {
 		if (cor.isInCircle(x,y)) { // On a cliqué sur le coin 'cor'
 			cor.taken = turn;
@@ -71,7 +75,7 @@ function clickOnCorners(event) {
 					}
 
 					// Pour chaque coin de l'hexagone, on cherche et store les coins pris par chaque joueur
-					hex.corners.map(name => allCorners[name]).forEach(corh => {
+					hex.getCorners().forEach(corh => {
 						var pl = corh.taken;
 						if (chains[pl].indexOf(corh) == -1) {
 							chains[pl].push(corh);
@@ -104,8 +108,8 @@ function clickOnCorners(event) {
 					var hex = pair.hexagon, pl = pair.player
 					hex.taken = pl;
 					hex.getCenterC().drawCircle(colorPlayers[pl]);
-					hex.corners.map(name => allCorners[name]).filter(corn => corn.taken == pl).forEach(corn =>{
-						corn.taken = -1; corn.drawCircle(colorCircle);
+					hex.getCorners().filter(corn => corn.taken == pl).forEach(corn =>{
+						corn.taken = -1; corn.drawCircle(colorDefault);
 					})
 				})
 			}
