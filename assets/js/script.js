@@ -30,7 +30,7 @@ ctx.translate(originX, originY);
 // Démarrage
 // -------------------------------------------------------------------------------------------------------
 
-let allHexa = [], allCorners = [];
+let allHexa = [], allCorners = [], allPlayers = [];
 
 // Création des hexagones
 for (var i = -1; i <= 1; i++) {
@@ -50,6 +50,12 @@ for (var i=-3; i <= 3; i++) {
 			allCorners.push(corner);
 		}
 	}
+}
+
+// Création des joueurs
+for (var i = 0; i <= 1; i ++) {
+	var player = new Player(i, colorPlayers[i], 0);
+	allPlayers.push(player);
 }
 
 // Pavage initial
