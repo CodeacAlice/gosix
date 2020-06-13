@@ -136,9 +136,10 @@ class Corner {
 // -------------------------------------------------------------------------------------------------------
 
 class Player {
-	constructor(id, color) {
+	constructor(id, color, victories) {
 		this.id = id;
         this.color = color;
+        this.victories = victories;
     }
 
     getScore() { return allHexa.filter(hex => hex.taken == this.id).length; }
@@ -147,11 +148,21 @@ class Player {
         $('#score_'+this.id).text(this.getScore());
     }
 
+    updateVictories() {
+        $('#victories_'+this.id).text(this.victories);
+    }
+    increaseVictories() {
+        this.victories ++;
+        this.updateVictories();
+    }
+
     createDiv() {
-        var div = $('<div>'), span = $('<span>');
-        span.attr('id', 'score_'+this.id).text(this.getScore());
+        var div = $('<div>'), span1 = $('<span>'), span2 = $('<span>');
+        span1.attr('id', 'score_'+this.id).text(this.getScore());
+        span2.attr('id', 'victories_'+this.id).text(this.victories);
         div.attr('id', 'player_'+this.id).addClass('player').css('border-color', this.color)
-            .html('Player '+(this.id+1)+'<br>Score: ').append(span);
+            .html('Player '+(this.id+1)+'<br>Score: ').append(span1)
+            .append('<br>Victories: ').append(span2);
         $('#players-container').append(div);
     }
 
@@ -162,6 +173,8 @@ class Player {
 
     wins() {
         alert("Player "+(this.id+1)+" wins!");
+        $('.player').css('box-shadow', 'none');
+        this.increaseVictories();
 
         canvas.off('click');
     }

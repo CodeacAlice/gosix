@@ -1,23 +1,18 @@
 
 // -------------------------------------------------------------------------------------------------------
-// Constantes de base
+// Constantes 
 // -------------------------------------------------------------------------------------------------------
 
+// Tailles
 const sizeHex = 70;
 const radiusRound = 10;
 
+// Couleurs
 const colorDefault = "white";
 const colorPlayers = ["green", "red"];
 
-
-
-// -------------------------------------------------------------------------------------------------------
-// Dessin
-// -------------------------------------------------------------------------------------------------------
-
+// Canvas
 const canvas = $('#gosixCanvas');
-canvas.click(clickOnCorners);
-
 const c = canvas[0];
 const ctx = c.getContext("2d");
 
@@ -34,6 +29,7 @@ ctx.translate(originX, originY);
 // -------------------------------------------------------------------------------------------------------
 
 let allHexa = [], allCorners = [], allPlayers = [];
+let turn = 0;
 
 // Création des hexagones
 for (var i = -1; i <= 1; i++) {
@@ -57,27 +53,31 @@ for (var i=-3; i <= 3; i++) {
 
 // Création des joueurs
 for (var i = 0; i <= 1; i ++) {
-	var player = new Player(i, colorPlayers[i]);
+	var player = new Player(i, colorPlayers[i], 0);
 	allPlayers.push(player);
 	player.createDiv();
 }
-allPlayers[0].turn();
 
-// Pavage initial
-function pavageHex() {
-	allHexa.forEach(hexa => {hexa.draw()});
-	allCorners.forEach(corner => {corner.drawCircle(colorDefault)});
+
+// Commencer une partie
+function start() {
+	ctx.clearRect(-originX, -originY, 2*originX, 2*originY);
+
+	allHexa.forEach(hex => {hex.taken = -1; hex.draw()});
+	allCorners.forEach(cor => {cor.taken = -1; cor.drawCircle()});
+	allPlayers.forEach(pl => pl.updateScore())
+	
+	allPlayers[0].turn(); turn = 0;
+	canvas.click(clickOnCorners);
 }
 
-window.onload = pavageHex();
+window.onload = start();
 
 
 
 // -------------------------------------------------------------------------------------------------------
 // Tour de jeu
 // -------------------------------------------------------------------------------------------------------
-
-let turn = 0;
 
 // Clic sur un cercle
 function clickOnCorners(e) {
