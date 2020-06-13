@@ -127,3 +127,23 @@ class Corner {
 }
 
 
+
+
+// -------------------------------------------------------------------------------------------------------
+// Joueur
+// -------------------------------------------------------------------------------------------------------
+
+class Player {
+	constructor(id, color, score) {
+		this.id = id;
+        this.color = color;
+        this.score = score;
+    }
+    
+    increaseScore() {
+        this.score ++;
+        $('#score_'+this.id).text(this.score);
+    }
+}
+
+
