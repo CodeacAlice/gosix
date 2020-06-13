@@ -69,9 +69,9 @@ window.onload = pavageHex();
 let turn = 0;
 
 // Clic sur un cercle
-function clickOnCorners(event) {
-	var x = event.clientX - originX,
-		y = event.clientY - originY;
+function clickOnCorners(e) {
+	var x = e.pageX - $('#myCanvas')[0].offsetLeft - originX,
+		y = e.pageY - $('#myCanvas')[0].offsetTop - originY;
 
 	// Si on a cliqué sur le coin 'cor', qui est libre
 	var cor = allCorners.filter(corner => (corner.taken == -1 && corner.isInCircle(x,y)))[0];
