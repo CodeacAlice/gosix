@@ -56,7 +56,9 @@ for (var i=-3; i <= 3; i++) {
 for (var i = 0; i <= 1; i ++) {
 	var player = new Player(i, colorPlayers[i], 0);
 	allPlayers.push(player);
+	player.createDiv();
 }
+allPlayers[0].turn();
 
 // Pavage initial
 function pavageHex() {
@@ -131,12 +133,17 @@ function clickOnCorners(e) {
 		}
 		// Sinon, on prend le coin et on gère les nouveaux hexagones pris
 		else {
-			cor.drawCircle(colorPlayers[turn]);
-			turn = (turn+1)%2;
+			cor.drawCircle(allPlayers[turn].color);
 			hexa_taken.forEach(pair => {pair.hexagon.take(pair.player)})
+			
+			// Si un joueur a gagné
+			var winner = allPlayers.filter(pl => pl.score >= 4)[0];
+			if (winner) {winner.wins();}
+			else {
+				turn = (turn+1)%2;
+				allPlayers[turn].turn();
+			}
 		}
-
 	}
-	
 }
 

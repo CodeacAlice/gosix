@@ -44,11 +44,13 @@ class Hexagon {
         ctx.stroke();
     }
 
-    // Prendre l'hexagon par le joueur 'player'
-    take (player) {
-        this.taken = player;
-        this.getCenterC().drawCircle(colorPlayers[player]);
-        this.getCorners().filter(cor => cor.taken == player).forEach(cor => {
+    // Prendre l'hexagon par le joueur d'id 'player_id'
+    take (player_id) {
+        this.taken = player_id;
+        allPlayers[player_id].increaseScore();
+
+        this.getCenterC().drawCircle(colorPlayers[player_id]);
+        this.getCorners().filter(cor => cor.taken == player_id).forEach(cor => {
             cor.taken = -1;
             cor.drawCircle(colorDefault);
         })
@@ -143,6 +145,23 @@ class Player {
     increaseScore() {
         this.score ++;
         $('#score_'+this.id).text(this.score);
+    }
+
+    createDiv() {
+        var div = $('<div>'), span = $('<span>');
+        span.attr('id', 'score_'+this.id).text(this.score);
+        div.attr('id', 'player_'+this.id).addClass('player').css('border-color', this.color)
+            .html('Player '+(this.id+1)+'<br>Score: ').append(span);
+        $('#players-container').append(div);
+    }
+
+    turn() {
+        $('.player').css('box-shadow', 'none');
+        $('#player_'+this.id).css("box-shadow", "0 0 20px -5px "+this.color);
+    }
+
+    wins() {
+        alert("Player "+(this.id+1)+" wins!")
     }
 }
 
