@@ -161,7 +161,9 @@ class Player {
     }
 
     wins() {
-        alert("Player "+(this.id+1)+" wins!")
+        alert("Player "+(this.id+1)+" wins!");
+
+        canvas.off('click');
     }
 }
 

@@ -15,7 +15,10 @@ const colorPlayers = ["green", "red"];
 // Dessin
 // -------------------------------------------------------------------------------------------------------
 
-const c = document.getElementById("myCanvas");
+const canvas = $('#gosixCanvas');
+canvas.click(clickOnCorners);
+
+const c = canvas[0];
 const ctx = c.getContext("2d");
 
 const originX = c.width/2;
