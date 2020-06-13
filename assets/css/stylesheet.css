@@ -1,0 +1,11 @@
+body {
+    text-align: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#players-container {
+    width: 700px;
+    display: flex;
+    justify-content: space-around;
+    margin: auto;
+}
