@@ -136,7 +136,7 @@ function clickOnCorners(e) {
 		}
 		// Sinon, on prend le coin et on gère les nouveaux hexagones pris
 		else {
-			cor.drawCircle(allPlayers[turn].color);
+			cor.drawCircle();
 			hexa_taken.forEach(pair => {pair.hexagon.take(pair.player)})
 			
 			// Si un joueur a gagné

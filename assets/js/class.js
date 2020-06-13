@@ -15,7 +15,7 @@ class Hexagon {
 
     // Récupérer le centre, en tant que coin
     getCenterC () {
-        return new Corner (this.col - this.row, this.col + 2*this.row);
+        return new Corner (this.col - this.row, this.col + 2*this.row, this.taken);
     }
     // Récupérer le centre, en tant que point (coord en pixels)
     getCenterP () {
@@ -49,10 +49,10 @@ class Hexagon {
         this.taken = player_id;
         allPlayers[player_id].updateScore();
 
-        this.getCenterC().drawCircle(colorPlayers[player_id]);
+        this.getCenterC().drawCircle();
         this.getCorners().filter(cor => cor.taken == player_id).forEach(cor => {
             cor.taken = -1;
-            cor.drawCircle(colorDefault);
+            cor.drawCircle();
         })
     }
 }
@@ -118,8 +118,8 @@ class Corner {
 		return d <= radiusRound;
     }
 
-    drawCircle (color) {
-        var coord = this.getCoordP();
+    drawCircle () {
+        var coord = this.getCoordP(), color = (this.taken == -1) ? colorDefault : allPlayers[this.taken].color;
         ctx.fillStyle = color;
         ctx.beginPath(); 
         ctx.arc(coord.x, coord.y, radiusRound, 0, 2 * Math.PI);
