@@ -47,7 +47,7 @@ class Hexagon {
     // Prendre l'hexagon par le joueur d'id 'player_id'
     take (player_id) {
         this.taken = player_id;
-        allPlayers[player_id].increaseScore();
+        allPlayers[player_id].updateScore();
 
         this.getCenterC().drawCircle(colorPlayers[player_id]);
         this.getCorners().filter(cor => cor.taken == player_id).forEach(cor => {
@@ -136,20 +136,20 @@ class Corner {
 // -------------------------------------------------------------------------------------------------------
 
 class Player {
-	constructor(id, color, score) {
+	constructor(id, color) {
 		this.id = id;
         this.color = color;
-        this.score = score;
     }
+
+    getScore() { return allHexa.filter(hex => hex.taken == this.id).length; }
     
-    increaseScore() {
-        this.score ++;
-        $('#score_'+this.id).text(this.score);
+    updateScore() {
+        $('#score_'+this.id).text(this.getScore());
     }
 
     createDiv() {
         var div = $('<div>'), span = $('<span>');
-        span.attr('id', 'score_'+this.id).text(this.score);
+        span.attr('id', 'score_'+this.id).text(this.getScore());
         div.attr('id', 'player_'+this.id).addClass('player').css('border-color', this.color)
             .html('Player '+(this.id+1)+'<br>Score: ').append(span);
         $('#players-container').append(div);

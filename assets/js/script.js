@@ -54,7 +54,7 @@ for (var i=-3; i <= 3; i++) {
 
 // Création des joueurs
 for (var i = 0; i <= 1; i ++) {
-	var player = new Player(i, colorPlayers[i], 0);
+	var player = new Player(i, colorPlayers[i]);
 	allPlayers.push(player);
 	player.createDiv();
 }
@@ -78,8 +78,8 @@ let turn = 0;
 
 // Clic sur un cercle
 function clickOnCorners(e) {
-	var x = e.pageX - $('#myCanvas')[0].offsetLeft - originX,
-		y = e.pageY - $('#myCanvas')[0].offsetTop - originY;
+	var x = e.pageX - c.offsetLeft - originX,
+		y = e.pageY - c.offsetTop - originY;
 
 	// Si on a cliqué sur le coin 'cor', qui est libre
 	var cor = allCorners.filter(corner => (corner.taken == -1 && corner.isInCircle(x,y)))[0];
@@ -137,7 +137,7 @@ function clickOnCorners(e) {
 			hexa_taken.forEach(pair => {pair.hexagon.take(pair.player)})
 			
 			// Si un joueur a gagné
-			var winner = allPlayers.filter(pl => pl.score >= 4)[0];
+			var winner = allPlayers.filter(pl => pl.getScore() >= 4)[0];
 			if (winner) {winner.wins();}
 			else {
 				turn = (turn+1)%2;
