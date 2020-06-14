@@ -161,8 +161,8 @@ class Player {
         span1.attr('id', 'score_'+this.id).text(this.getScore());
         span2.attr('id', 'victories_'+this.id).text(this.victories);
         div.attr('id', 'player_'+this.id).addClass('player').css('border-color', this.color)
-            .html('Player '+(this.id+1)+'<br>Score: ').append(span1)
-            .append('<br>Victories: ').append(span2);
+            .html('Joueur '+(this.id+1)+'<br>Score : ').append(span1)
+            .append('<br>Victoires : ').append(span2);
         $('#players-container').append(div);
     }
 
@@ -172,7 +172,7 @@ class Player {
     }
 
     wins() {
-        alert("Player "+(this.id+1)+" wins!");
+        alert("Victoire du joueur "+(this.id+1)+" !");
         $('.player').css('box-shadow', 'none');
         this.increaseVictories();
 

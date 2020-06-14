@@ -21,6 +21,9 @@ const originY = c.height/2
 
 ctx.translate(originX, originY);
 
+// Erreur
+const errorText = "Erreur : ce coin ne peut être pris."
+
 
 
 
@@ -131,7 +134,7 @@ function clickOnCorners(e) {
 
 		// S'il y a une égalité, on ne peut pas prendre le coin
 		if (equal) {
-			alert("Rule 618: this corner cannot be taken");
+			alert(errorText);
 			cor.taken = -1;
 		}
 		// Sinon, on prend le coin et on gère les nouveaux hexagones pris
