@@ -64,6 +64,7 @@ for (var i = 0; i <= 1; i ++) {
 
 // Commencer une partie
 function start() {
+	canvas.off('click');
 	ctx.clearRect(-originX, -originY, 2*originX, 2*originY);
 
 	allHexa.forEach(hex => {hex.taken = -1; hex.draw()});
