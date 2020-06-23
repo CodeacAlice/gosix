@@ -157,12 +157,15 @@ class Player {
     }
 
     createDiv() {
-        var div = $('<div>'), span1 = $('<span>'), span2 = $('<span>');
+        var div = $('<div>'), span1 = $('<span>'), span2 = $('<span>'), input = $('<input>');
         span1.attr('id', 'score_'+this.id).text(this.getScore());
         span2.attr('id', 'victories_'+this.id).text(this.victories);
+        input.attr('type', 'color').attr('data-id', this.id).val(this.color);
+
         div.attr('id', 'player_'+this.id).addClass('player').css('border-color', this.color)
             .html('Joueur '+(this.id+1)+'<br>Score : ').append(span1)
-            .append('<br>Victoires : ').append(span2);
+            .append('<br>Victoires : ').append(span2)
+            .append('<br>').append(input);
         $('#players-container').append(div);
     }
 

@@ -9,7 +9,7 @@ const radiusRound = 10;
 
 // Couleurs
 const colorDefault = "white";
-const colorPlayers = ["green", "red"];
+const colorPlayers = ["#00ff00", "#ff0000"];
 
 // Canvas
 const canvas = $('#gosixCanvas');
