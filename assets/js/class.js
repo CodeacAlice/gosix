@@ -184,6 +184,7 @@ class Player {
         this.increaseVictories();
 
         canvas.off('click');
+        turn = -1;
     }
 
     changeColor(color) {
