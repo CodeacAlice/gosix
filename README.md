@@ -18,6 +18,6 @@ Aucun.
 
 
 ## Sources
-* [À propos du jeu] (https://www.trictrac.net/jeu-de-societe/gosix), [et de son créateur] (https://www.trictrac.net/repertoire/personnalite/pierre-canuel)
-* [Icônes utilisées] (https://fontawesome.com/)
-* [Grilles hexagonales] (https://www.redblobgames.com/grids/hexagons/)
+* À propos du jeu : https://www.trictrac.net/jeu-de-societe/gosix, et de Pierre Canuel son créateur : https://www.trictrac.net/repertoire/personnalite/pierre-canuel
+* Icônes utilisées : https://fontawesome.com/
+* Guide sur les grilles hexagonales : https://www.redblobgames.com/grids/hexagons/
