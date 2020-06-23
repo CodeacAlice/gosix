@@ -142,7 +142,11 @@ class Player {
         this.victories = victories;
     }
 
-    getScore() { return allHexa.filter(hex => hex.taken == this.id).length; }
+    getHexa() { return allHexa.filter(hex => hex.taken == this.id); }
+    getCorners() { return allCorners.filter(cor => cor.taken == this.id); }
+
+    getScore() { return this.getHexa().length; }
+
     
     updateScore() {
         $('#score_'+this.id).text(this.getScore());
@@ -180,6 +184,14 @@ class Player {
         this.increaseVictories();
 
         canvas.off('click');
+    }
+
+    changeColor(color) {
+        this.color = color;
+        this.getCorners().forEach(cor => cor.drawCircle());
+        this.getHexa().forEach(hex => hex.getCenterC().drawCircle());
+        $('#player_'+this.id).css('border-color', this.color);
+        if (turn == this.id) {this.turn();}
     }
 }
 
